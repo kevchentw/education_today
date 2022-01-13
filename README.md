@@ -8,6 +8,7 @@ by: Kuan-Yin Chen (kuanyin2)
 
 1. Docker
 2. Node.js + yarn
+3. Python 3.9
 
 ### Steps
 
