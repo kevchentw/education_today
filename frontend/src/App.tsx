@@ -12,6 +12,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import MostCitedPapers from "./components/MostCitedPapers";
+import MostRelatedInsitutions from "./components/MostRelatedInsitutions";
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
           <Tabs>
             <TabList>
               <Tab>Task 1: Most Cited Paper</Tab>
-              <Tab>Task 2</Tab>
+              <Tab>Task 2: Most Related Insitutions</Tab>
             </TabList>
 
             <TabPanels>
@@ -31,7 +32,7 @@ function App() {
                 <MostCitedPapers />
               </TabPanel>
               <TabPanel>
-                <p>two!</p>
+                <MostRelatedInsitutions />
               </TabPanel>
             </TabPanels>
           </Tabs>

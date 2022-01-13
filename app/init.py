@@ -12,7 +12,7 @@ try:
 except Exception:
     pass
 
-# subprocess.run(["sh", "/app/import.sh"])
+subprocess.run(["sh", "/app/import.sh"])
 
 # tables = [("Affiliations.txt", Affiliations), ("Authors.txt", Authors), ("Papers.txt", Papers),
 #           ("PaperAuthorAffiliations.txt", PaperAuthorAffiliations), ("PaperReferences.txt", PaperReferences)]
