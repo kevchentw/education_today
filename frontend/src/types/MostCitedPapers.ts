@@ -1,3 +1,15 @@
+export interface IAuthor {
+  AuthorId: number;
+  Rank: number;
+  NormalizedName: string;
+  DisplayName: number;
+  LastKnownAffiliationId?: number;
+  PaperCount: number;
+  PaperFamilyCount: number;
+  CitationCount: number;
+  CreatedDate?: Date;
+}
+
 export interface IMostCitedPapers {
   PaperId: number;
   Rank: number;
@@ -26,4 +38,9 @@ export interface IMostCitedPapers {
   DocSubTypes: string;
   CreatedDate?: Date;
   CitedByCount: number;
+}
+
+export interface IAPIMostCitedPaperResponse {
+  author: IAuthor;
+  results: IMostCitedPapers[];
 }

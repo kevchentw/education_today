@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { IMostCitedPapers } from "../types/MostCitedPapers";
+import { IAPIMostCitedPaperResponse } from "../types/MostCitedPapers";
 import {
   Table,
   Thead,
@@ -14,10 +14,11 @@ import {
   FormControl,
   Box,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 
 export default function MostCitedPapers() {
-  const [data, setData] = useState<IMostCitedPapers[]>([]);
+  const [data, setData] = useState<IAPIMostCitedPaperResponse>();
   const [limit, setLimit] = useState(10);
   const [authorId, setAuthorId] = useState(2096520082);
 
@@ -57,7 +58,7 @@ export default function MostCitedPapers() {
           </Button>
         </Stack>
       </Box>
-
+      <Text m={4}>Author: {data?.author.DisplayName}</Text>
       <Table>
         <Thead>
           <Tr>
@@ -67,7 +68,7 @@ export default function MostCitedPapers() {
           </Tr>
         </Thead>
         <Tbody>
-          {data.map((x) => (
+          {data?.results.map((x) => (
             <Tr>
               <Td>{x.PaperId}</Td>
               <Td>{x.PaperTitle}</Td>

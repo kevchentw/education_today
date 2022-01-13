@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { IMostRelatedInsitutions } from "../types/MostRelatedInsitutions";
+import { IAPIMostRelatedInsitutionResponse } from "../types/MostRelatedInsitutions";
 import {
   Table,
   Thead,
@@ -14,12 +14,13 @@ import {
   FormControl,
   Box,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 
 export default function MostRelatedInsitutions() {
-  const [data, setData] = useState<IMostRelatedInsitutions[]>([]);
+  const [data, setData] = useState<IAPIMostRelatedInsitutionResponse>();
   const [limit, setLimit] = useState(10);
-  const [affiliationId, setAffiliationId] = useState(162714631);
+  const [affiliationId, setAffiliationId] = useState(148366613);
 
   async function fetchData() {
     try {
@@ -57,7 +58,7 @@ export default function MostRelatedInsitutions() {
           </Button>
         </Stack>
       </Box>
-
+      <Text m={4}>Affiliation: {data?.affiliation.DisplayName}</Text>
       <Table>
         <Thead>
           <Tr>
@@ -67,7 +68,7 @@ export default function MostRelatedInsitutions() {
           </Tr>
         </Thead>
         <Tbody>
-          {data.map((x) => (
+          {data?.results.map((x) => (
             <Tr>
               <Td>{x.AffiliationId}</Td>
               <Td>{x.DisplayName}</Td>
