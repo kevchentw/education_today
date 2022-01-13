@@ -1,10 +1,12 @@
 from typing import Optional
-from datetime import datetime
-from sqlmodel import Field, Session, SQLModel, create_engine
+from datetime import date
+from sqlmodel import Field, SQLModel, Column, BigInteger
 
 
 class Affiliations(SQLModel, table=True):
-    AffiliationId: int = Field(default=None, primary_key=True)
+    __tablename__ = 'affiliations'
+    AffiliationId: int = Field(
+        default=None, sa_column=Column(BigInteger(), primary_key=True))
     Rank: int
     NormalizedName: str
     DisplayName: str
@@ -17,23 +19,28 @@ class Affiliations(SQLModel, table=True):
     Iso3166Code: str
     Latitude: Optional[float]
     Longitude: Optional[float]
-    CreatedDate: datetime
+    CreatedDate: Optional[date]
 
 
 class Authors(SQLModel, table=True):
-    AuthorId: int = Field(default=None, primary_key=True)
+    __tablename__ = 'authors'
+    AuthorId: int = Field(default=None,
+                          sa_column=Column(BigInteger(), primary_key=True))
     Rank: int
     NormalizedName: str
     DisplayName: str
-    LastKnownAffiliationId: Optional[int]
+    LastKnownAffiliationId: Optional[int] = Field(default=None,
+                                                  sa_column=Column(BigInteger(), index=True))
     PaperCount: int
     PaperFamilyCount: int
     CitationCount: int
-    CreatedDate: datetime
+    CreatedDate: Optional[date]
 
 
 class Papers(SQLModel, table=True):
-    PaperId: int = Field(default=None, primary_key=True)
+    __tablename__ = 'papers'
+    PaperId: int = Field(default=None,
+                         sa_column=Column(BigInteger(), primary_key=True))
     Rank: int
     Doi: str
     DocType: str
@@ -41,8 +48,8 @@ class Papers(SQLModel, table=True):
     OriginalTitle: str
     BookTitle: str
     Year: Optional[int]
-    Date: Optional[datetime]
-    OnlineDate: Optional[datetime]
+    Date: Optional[date]
+    OnlineDate: Optional[date]
     Publisher: str
     JournalId: Optional[int]
     ConferenceSeriesId: Optional[int]
@@ -58,28 +65,27 @@ class Papers(SQLModel, table=True):
     FamilyId: int
     FamilyRank: int
     DocSubTypes: str
-    CreatedDate: datetime
+    CreatedDate: Optional[date]
 
 
 class PaperAuthorAffiliations(SQLModel, table=True):
-    Id: int = Field(default=None, primary_key=True)
-    PaperId: int = Field(default=None, foreign_key="papers.PaperId")
-    AuthorId: int = Field(default=None, foreign_key="authors.AuthorId")
+    __tablename__ = 'paperauthoraffiliations'
+    Id: int = Field(default=None,
+                    sa_column=Column(BigInteger(), primary_key=True))
+    PaperId: int = Field(
+        default=None, foreign_key="papers.PaperId", sa_column=Column(BigInteger(), index=True))
+    AuthorId: int = Field(
+        default=None, foreign_key="authors.AuthorId", sa_column=Column(BigInteger(), index=True))
     AffiliationId: int = Field(
-        default=None, foreign_key="affiliations.AffiliationId")
+        default=None, foreign_key="affiliations.AffiliationId", sa_column=Column(BigInteger(), index=True))
     AuthorSequenceNumber: int
     OriginalAuthor: str
     OriginalAffiliation: str
 
 
 class PaperReferences(SQLModel, table=True):
+    __tablename__ = 'paperreferences'
     PaperId: int = Field(
-        default=None, foreign_key="papers.PaperId", primary_key=True)
+        default=None, foreign_key="papers.PaperId", sa_column=Column(BigInteger(), primary_key=True, index=True))
     PaperReferenceId: int = Field(
-        default=None, foreign_key="papers.PaperId", primary_key=True)
-
-
-engine = create_engine(
-    "mysql+pymysql://root:education_uiuc_pwd@db/education_uiuc")
-
-SQLModel.metadata.create_all(engine)
+        default=None, foreign_key="papers.PaperId", sa_column=Column(BigInteger(), primary_key=True, index=True))

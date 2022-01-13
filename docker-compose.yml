@@ -7,9 +7,12 @@ services:
           context: app
         restart: always
         ports:
-            - '8000:8000'
+            - '5000:5000'
         volumes:
             - ./app:/app
+            - ./data:/data
+        environment:
+            - FLASK_DEBUG=1
         networks:
             - backend
         links:
@@ -26,10 +29,11 @@ services:
             MYSQL_DATABASE: education_uiuc
         ports:
             - '3308:3306'
-        volumes:
-            - ./database:/var/lib/mysql
+        # volumes:
+        #     - ./database:/var/lib/mysql
         networks:
             - backend
+        command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
     phpmyadmin:
       image: phpmyadmin/phpmyadmin
       links:
@@ -45,9 +49,18 @@ services:
           - backend
       depends_on:
         - db
+    db_init:
+      build:
+        context: app
+      depends_on:
+        - db
+      links:
+        - db
+      networks:
+          - backend
+      command: python /app/init.py
+      volumes:
+          - ./app:/app
+          - ./data:/data
 networks:
     backend:
-
-volumes:
-    app:
-    database:
