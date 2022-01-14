@@ -22,7 +22,7 @@ q_author_papers = select(models.PaperAuthorAffiliations.PaperId).where(models.Pa
 q = select(models.PaperReferences.PaperReferenceId, func.count(1)).where(models.PaperReferences.PaperId.in_(q_author_papers)).group_by(models.PaperReferences.PaperReferenceId).order_by(func.count(1).desc()).limit(limit)
 ```
 
-### Task 2: Task 2: Most Related Insitutions
+### Task 2: Most Related Insitutions
 
 1. Find affiliation's all authors
 ```
