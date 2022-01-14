@@ -2,6 +2,51 @@
 
 by: Kuan-Yin Chen (kuanyin2)
 
+Video: https://www.youtube.com/watch?v=BrgfgPu6jhQ
+
+## Task
+
+### Task 1: Most Cited Paper
+
+1. Find author's all papers 
+```
+q_author_papers = select(models.PaperAuthorAffiliations.PaperId).where(models.PaperAuthorAffiliations.AuthorId == authorId)
+```
+
+
+2. 
+- Get all referenced papers from first step's papers.
+- Aggreated and count number of been referenced 
+- Order and limit the result
+```
+q = select(models.PaperReferences.PaperReferenceId, func.count(1)).where(models.PaperReferences.PaperId.in_(q_author_papers)).group_by(models.PaperReferences.PaperReferenceId).order_by(func.count(1).desc()).limit(limit)
+```
+
+### Task 2: Task 2: Most Related Insitutions
+
+1. Find affiliation's all authors
+```
+q_affiliation_author = select(models.Authors.AuthorId).where(models.Authors.LastKnownAffiliationId == affiliationId).distinct()
+```
+
+2. Find all papers from step one's authors
+```
+q_co_author_paper = select(models.PaperAuthorAffiliations.PaperId).where(models.PaperAuthorAffiliations.AuthorId.in_(q_affiliation_author)).distinct()
+```
+
+3. Find all co-authors from second step's paper (exclude input affiliationId)
+```
+q_co_author = select(models.PaperAuthorAffiliations.AuthorId).where(models.PaperAuthorAffiliations.PaperId.in_(q_co_author_paper)).where(~models.PaperAuthorAffiliations.AffiliationId.in_([affiliationId])).distinct()
+```
+
+4. 
+- Get third step's authors LastKnownAffiliationId
+- Aggreated and count number of LastKnownAffiliationId
+- Order and limit the result
+```
+q_affiliation = select(models.Authors.LastKnownAffiliationId, func.count(1)).where(models.Authors.AuthorId.in_(q_co_author)).where(~models.Authors.LastKnownAffiliationId.in_([0, affiliationId])).group_by(models.Authors.LastKnownAffiliationId).order_by(func.count(1).desc()).limit(limit)
+```
+
 ## Development Setup
 
 ### Requirements
@@ -23,7 +68,6 @@ by: Kuan-Yin Chen (kuanyin2)
 2. `yarn install`
 3. `yarn start`
 4. open `http://localhost:3000/`
-
 
 ## Methodology
 
@@ -84,45 +128,3 @@ I use hook (`useState`) to store form value and api response.
 
 code: `app/app.py`
 
-## Task
-
-### Task 1: Most Cited Paper
-
-1. Find author's all papers 
-```
-q_author_papers = select(models.PaperAuthorAffiliations.PaperId).where(models.PaperAuthorAffiliations.AuthorId == authorId)
-```
-
-
-2. 
-- Get all referenced papers from first step's papers.
-- Aggreated and count number of been referenced 
-- Order and limit the result
-```
-q = select(models.PaperReferences.PaperReferenceId, func.count(1)).where(models.PaperReferences.PaperId.in_(q_author_papers)).group_by(models.PaperReferences.PaperReferenceId).order_by(func.count(1).desc()).limit(limit)
-```
-
-### Task 2: Task 2: Most Related Insitutions
-
-1. Find affiliation's all authors
-```
-q_affiliation_author = select(models.Authors.AuthorId).where(models.Authors.LastKnownAffiliationId == affiliationId).distinct()
-```
-
-2. Find all papers from step one's authors
-```
-q_co_author_paper = select(models.PaperAuthorAffiliations.PaperId).where(models.PaperAuthorAffiliations.AuthorId.in_(q_affiliation_author)).distinct()
-```
-
-3. Find all co-authors from second step's paper (exclude input affiliationId)
-```
-q_co_author = select(models.PaperAuthorAffiliations.AuthorId).where(models.PaperAuthorAffiliations.PaperId.in_(q_co_author_paper)).where(~models.PaperAuthorAffiliations.AffiliationId.in_([affiliationId])).distinct()
-```
-
-4. 
-- Get third step's authors LastKnownAffiliationId
-- Aggreated and count number of LastKnownAffiliationId
-- Order and limit the result
-```
-q_affiliation = select(models.Authors.LastKnownAffiliationId, func.count(1)).where(models.Authors.AuthorId.in_(q_co_author)).where(~models.Authors.LastKnownAffiliationId.in_([0, affiliationId])).group_by(models.Authors.LastKnownAffiliationId).order_by(func.count(1).desc()).limit(limit)
-```
