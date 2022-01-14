@@ -15,15 +15,18 @@ import {
   Box,
   Stack,
   Text,
+  Spinner,
 } from "@chakra-ui/react";
 
 export default function MostCitedPapers() {
   const [data, setData] = useState<IAPIMostCitedPaperResponse>();
   const [limit, setLimit] = useState(10);
   const [authorId, setAuthorId] = useState(2096520082);
+  const [loading, setLoading] = useState(false);
 
   async function fetchData() {
     try {
+      setLoading(true);
       const response = await axios.get("/api/most-cited-papers", {
         params: { limit, authorId },
       });
@@ -31,6 +34,7 @@ export default function MostCitedPapers() {
     } catch (error) {
       console.error(error);
     }
+    setLoading(false);
   }
 
   return (
@@ -67,15 +71,21 @@ export default function MostCitedPapers() {
             <Th>Cited Count</Th>
           </Tr>
         </Thead>
-        <Tbody>
-          {data?.results.map((x) => (
-            <Tr>
-              <Td>{x.PaperId}</Td>
-              <Td>{x.PaperTitle}</Td>
-              <Td>{x.CitedByCount}</Td>
-            </Tr>
-          ))}
-        </Tbody>
+        {loading ? (
+          <Box w="100%" p={4}>
+            <Spinner />
+          </Box>
+        ) : (
+          <Tbody>
+            {data?.results.map((x) => (
+              <Tr>
+                <Td>{x.PaperId}</Td>
+                <Td>{x.OriginalTitle}</Td>
+                <Td>{x.CitedByCount}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        )}
       </Table>
     </div>
   );

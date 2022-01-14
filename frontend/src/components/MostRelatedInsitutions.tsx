@@ -15,15 +15,18 @@ import {
   Box,
   Stack,
   Text,
+  Spinner,
 } from "@chakra-ui/react";
 
 export default function MostRelatedInsitutions() {
   const [data, setData] = useState<IAPIMostRelatedInsitutionResponse>();
   const [limit, setLimit] = useState(10);
+  const [loading, setLoading] = useState(false);
   const [affiliationId, setAffiliationId] = useState(148366613);
 
   async function fetchData() {
     try {
+      setLoading(true);
       const response = await axios.get("/api/most-related-insitutions", {
         params: { limit, affiliationId },
       });
@@ -31,6 +34,7 @@ export default function MostRelatedInsitutions() {
     } catch (error) {
       console.error(error);
     }
+    setLoading(false);
   }
 
   return (
@@ -58,7 +62,7 @@ export default function MostRelatedInsitutions() {
           </Button>
         </Stack>
       </Box>
-      <Text m={4}>Affiliation: {data?.affiliation.DisplayName}</Text>
+      <Text>Affiliation: {data?.affiliation.DisplayName}</Text>
       <Table>
         <Thead>
           <Tr>
@@ -67,15 +71,21 @@ export default function MostRelatedInsitutions() {
             <Th>Related Count</Th>
           </Tr>
         </Thead>
-        <Tbody>
-          {data?.results.map((x) => (
-            <Tr>
-              <Td>{x.AffiliationId}</Td>
-              <Td>{x.DisplayName}</Td>
-              <Td>{x.RelatedCount}</Td>
-            </Tr>
-          ))}
-        </Tbody>
+        {loading ? (
+          <Box w="100%" p={4}>
+            <Spinner />
+          </Box>
+        ) : (
+          <Tbody>
+            {data?.results.map((x) => (
+              <Tr>
+                <Td>{x.AffiliationId}</Td>
+                <Td>{x.DisplayName}</Td>
+                <Td>{x.RelatedCount}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        )}
       </Table>
     </div>
   );
