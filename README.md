@@ -4,7 +4,7 @@ by: Kuan-Yin Chen (kuanyin2)
 
 Video: https://www.youtube.com/watch?v=BrgfgPu6jhQ
 
-## Tasks 
+## Tasks' Methodology
 
 ### Task 1: Most Cited Paper
 
@@ -69,7 +69,7 @@ q_affiliation = select(models.Authors.LastKnownAffiliationId, func.count(1)).whe
 3. `yarn start`
 4. open `http://localhost:3000/`
 
-## Methodology
+## System Methodology
 
 ### Database Design
 
