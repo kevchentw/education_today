@@ -4,7 +4,7 @@ by: Kuan-Yin Chen (kuanyin2)
 
 Video: https://www.youtube.com/watch?v=BrgfgPu6jhQ
 
-## Tasks' Methodology
+## Task Methodology
 
 ### Task 1: Most Cited Paper
 
